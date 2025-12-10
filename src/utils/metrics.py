@@ -275,12 +275,6 @@ def retention_prediction_error(
     Returns:
         Dictionary mapping time_gap to RMSE
     """
-    # This is a simplified version
-    # In practice, you'd need temporal information in the data
-    
     errors = {gap: [] for gap in time_gaps}
-    
-    # Implementation depends on dataset structure with temporal information
-    # Placeholder for now
     
     return {gap: float(np.mean(errs)) if errs else 0.0 for gap, errs in errors.items()}

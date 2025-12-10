@@ -8,25 +8,25 @@ data:
   val_split: 0.15
   test_split: 0.15
   random_seed: 42
-  sequence_length: 200  # Maximum sequence length
-  min_interactions: 5   # Minimum interactions per student
+  sequence_length: 200
+  min_interactions: 3
 
 # Model Architecture
 model:
-  input_dim: 100        # Number of unique skills/questions
-  hidden_dim: 100       # LSTM hidden dimension
-  num_layers: 2         # Number of LSTM layers
-  dropout: 0.3          # Dropout
-  embedding_dim: 50     # Skill embedding dimension
-  model_type: "lstm"    # lstm or gru
+  input_dim: 100
+  hidden_dim: 100
+  num_layers: 2
+  dropout: 0.3
+  embedding_dim: 50
+  model_type: "lstm"
 
 # Training
 training:
   num_epochs: 50
-  batch_size: 16        
+  batch_size: 16
   learning_rate: 0.001
   optimizer: "adam"
-  scheduler: "plateau"  # plateau, step, or cosine
+  scheduler: "plateau"
   scheduler_patience: 5
   scheduler_factor: 0.5
   weight_decay: 0.00001
@@ -35,7 +35,7 @@ training:
   num_workers: 4
   save_dir: "models/dkt"
   log_dir: "results/logs/dkt"
-  checkpoint_freq: 5    # Save checkpoint every N epochs
+  checkpoint_freq: 5
 
 # Early Stopping
 early_stopping:

@@ -2,7 +2,7 @@
 
 # Data
 data:
-  dataset: "assistments"  # Using ASSISTments 2015 dataset
+  dataset: "assistments"
   data_path: "data/raw/assistments/2015_100_skill_builders_main_problems.csv"
   train_split: 0.7
   val_split: 0.15
@@ -12,13 +12,13 @@ data:
 # Logistic Regression
 logistic_regression:
   max_iter: 1000
-  C: 1.0  # Regularization strength
+  C: 1.0
   solver: "lbfgs"
   class_weight: "balanced"
 
 # Training
 training:
-  device: "cuda"  # cuda or cpu
+  device: "cuda"
   num_workers: 4
   save_dir: "models/baseline"
   log_dir: "results/logs/baseline"
