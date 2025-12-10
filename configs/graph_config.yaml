@@ -76,10 +76,3 @@ evaluation:
   prediction_path: "results/graph_predictions.csv"
   analyze_by_difficulty: true
   analyze_by_concept: true
-
-# Logging
-logging:
-  use_tensorboard: true
-  use_wandb: false
-  wandb_project: "adaptive-quizzing"
-  wandb_entity: "your-username"
