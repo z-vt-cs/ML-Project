@@ -98,9 +98,9 @@ This repository includes pre-trained models in the `models/` directory that you 
 ## Configuration
 
 See `configs/` for model hyperparameters:
-- `baseline_config.yaml` — Data paths and splits
-- `dkt_config.yaml` — LSTM architecture settings
-- `graph_config.yaml` — GCN layers, edge threshold, fusion method
+- `baseline_config.yaml` - Data paths and splits
+- `dkt_config.yaml` - LSTM architecture settings
+- `graph_config.yaml` - GCN layers, edge threshold, fusion method
 
 ## Dataset
 
