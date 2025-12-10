@@ -63,19 +63,19 @@ class GraphDKT(nn.Module):
         )
         
         # GNN for graph structure
+        hidden_dims = [graph_hidden_dim] * max(0, num_gnn_layers - 1)
         if gnn_type == 'gcn':
             self.gnn = GCN(
-                input_dim=embedding_dim,
-                hidden_dim=graph_hidden_dim,
-                output_dim=graph_hidden_dim,
-                num_layers=num_gnn_layers,
+                in_features=embedding_dim,
+                hidden_dims=hidden_dims,
+                out_features=graph_hidden_dim,
                 dropout=dropout
             )
         elif gnn_type == 'gat':
             self.gnn = GAT(
-                input_dim=embedding_dim,
-                hidden_dim=graph_hidden_dim // 4,  # Divided by number of heads
-                output_dim=graph_hidden_dim,
+                in_features=embedding_dim,
+                hidden_dims=hidden_dims,
+                out_features=graph_hidden_dim,
                 num_heads=4,
                 dropout=dropout
             )
@@ -126,7 +126,6 @@ class GraphDKT(nn.Module):
         node_features = self.skill_embeddings.weight  # [n_skills, embedding_dim]
         
         # Apply GNN - GNN layers handle normalization internally
-        # Don't normalize here to avoid double normalization!
         graph_embeddings = self.gnn(node_features, adjacency)
         
         return graph_embeddings
@@ -241,10 +240,11 @@ class TemporalGraphAttention(nn.Module):
         self.transformer = nn.TransformerEncoder(encoder_layer, num_layers=num_layers)
         
         # Graph attention for structural dependencies
+        tg_hidden_dims = [hidden_dim] * max(0, num_layers - 1)
         self.graph_attention = GAT(
-            input_dim=embedding_dim,
-            hidden_dim=hidden_dim // 4,
-            output_dim=hidden_dim,
+            in_features=embedding_dim,
+            hidden_dims=tg_hidden_dims,
+            out_features=hidden_dim,
             num_heads=num_heads,
             dropout=dropout
         )
