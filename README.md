@@ -106,3 +106,8 @@ See `configs/` for model hyperparameters:
 
 **ASSISTments 2015:** 104,804 interactions, 100 skills, 70/15/15 split
 
+---
+
+## AI Assistance Disclosure
+
+This project was developed with assistance from AI tools (GitHub Copilot) for code completion, debugging, and documentation. All core algorithms, model architectures, and experimental design decisions were made by the developer. The AI was used as a productivity tool, similar to using Stack Overflow or documentation references.
