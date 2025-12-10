@@ -16,7 +16,7 @@ model:
   input_dim: 100        # Number of unique skills/questions
   hidden_dim: 100       # LSTM hidden dimension
   num_layers: 2         # Number of LSTM layers
-  dropout: 0.3          #  More dropout to weaken model
+  dropout: 0.3          # Dropout
   embedding_dim: 50     # Skill embedding dimension
   model_type: "lstm"    # lstm or gru
 
