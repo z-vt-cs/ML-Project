@@ -48,10 +48,3 @@ evaluation:
   metrics: ["accuracy", "auc", "rmse"]
   save_predictions: true
   prediction_path: "results/dkt_predictions.csv"
-
-# Logging
-logging:
-  use_tensorboard: true
-  use_wandb: false
-  wandb_project: "adaptive-quizzing"
-  wandb_entity: "your-username"
