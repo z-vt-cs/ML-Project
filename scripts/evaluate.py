@@ -8,7 +8,9 @@ import torch
 from torch.utils.data import DataLoader
 from pathlib import Path
 import pandas as pd
+import numpy as np
 import sys
+import joblib
 
 sys.path.append(str(Path(__file__).parent.parent))
 
@@ -20,7 +22,7 @@ from src.data import (
     load_mappings
 )
 from src.models import DKTPlusModel, GraphDKT
-from src.utils import evaluate_model, evaluate_by_skill, evaluate_by_student
+from src.utils import evaluate_model, evaluate_by_skill, evaluate_by_student, compute_metrics
 from src.graph import KnowledgeGraphBuilder
 
 
@@ -29,6 +31,46 @@ def load_config(config_path: str) -> dict:
     with open(config_path, 'r') as f:
         config = yaml.safe_load(f)
     return config
+
+
+def evaluate_logistic_regression(model_path: str, config: dict, split: str = 'test'):
+    """Evaluate logistic regression baseline model."""
+    # Load model and encoder
+    checkpoint = joblib.load(model_path)
+    model = checkpoint['model']
+    encoder = checkpoint['encoder']
+    
+    # Load data
+    processor = ASSISTmentsProcessor(config['data']['data_path'])
+    df = processor.preprocess()
+    train_df, val_df, test_df = train_val_test_split(
+        df,
+        config['data']['train_split'],
+        config['data']['val_split'],
+        config['data']['test_split'],
+        config['data']['random_seed']
+    )
+    
+    # Select split
+    if split == 'train':
+        eval_df = train_df
+    elif split == 'val':
+        eval_df = val_df
+    else:
+        eval_df = test_df
+    
+    # Prepare features
+    from sklearn.preprocessing import OneHotEncoder
+    X_eval = encoder.transform(eval_df[['student_idx', 'skill_idx']])
+    y_eval = eval_df['correct'].values
+    
+    # Get predictions
+    predictions = model.predict_proba(X_eval)[:, 1]
+    
+    # Compute metrics
+    metrics = compute_metrics(predictions, np.array(y_eval))
+    
+    return metrics, predictions, y_eval
 
 
 def main():
@@ -40,11 +82,37 @@ def main():
     parser.add_argument('--split', type=str, default='test',
                         choices=['train', 'val', 'test'],
                         help='Data split to evaluate on')
+    parser.add_argument('--model_type', type=str, default='dkt',
+                        choices=['logistic', 'dkt', 'graph_dkt'],
+                        help='Type of model to evaluate')
     
     args = parser.parse_args()
     
     # Load config
     config = load_config(args.config)
+    
+    # Check if logistic regression
+    if args.model_type == 'logistic' or args.model_path.endswith('.joblib'):
+        print(f"Evaluating Logistic Regression on {args.split} set...")
+        metrics, predictions, targets = evaluate_logistic_regression(
+            args.model_path, config, args.split
+        )
+        
+        print("\n=== Overall Metrics ===")
+        for metric, value in metrics.items():
+            print(f"{metric}: {value:.4f}")
+        
+        # Save predictions if requested
+        if config['evaluation'].get('save_predictions', False):
+            pred_df = pd.DataFrame({
+                'prediction': predictions,
+                'target': targets
+            })
+            pred_path = config['evaluation']['prediction_path']
+            pred_df.to_csv(pred_path, index=False)
+            print(f"\nSaved predictions to {pred_path}")
+        
+        return
     
     # Load data
     processor = ASSISTmentsProcessor(config['data']['data_path'])

@@ -40,7 +40,14 @@ python scripts/train_logistic_regression.py --config configs/baseline_config.yam
 
 Evaluate model performance:
 ```bash
-python scripts/evaluate.py --model <model_name>
+# Deep Knowledge Tracing
+python scripts/evaluate.py --model_path models/dkt/best_model.pth --config configs/dkt_config.yaml --split test
+
+# Graph-Enhanced DKT
+python scripts/evaluate.py --model_path models/graph_enhanced/best_model.pth --config configs/graph_config.yaml --split test
+
+# Logistic Regression Baseline
+python scripts/evaluate.py --model_path models/baseline/logistic_regression.joblib --config configs/baseline_config.yaml --split test
 ```
 
 ## Pre-trained Models
