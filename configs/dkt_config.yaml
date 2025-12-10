@@ -1,0 +1,57 @@
+# Deep Knowledge Tracing Configuration
+
+# Data
+data:
+  dataset: "assistments"
+  data_path: "data/raw/assistments/2015_100_skill_builders_main_problems.csv"
+  train_split: 0.7
+  val_split: 0.15
+  test_split: 0.15
+  random_seed: 42
+  sequence_length: 200  # Maximum sequence length
+  min_interactions: 5   # Minimum interactions per student
+
+# Model Architecture
+model:
+  input_dim: 100        # Number of unique skills/questions
+  hidden_dim: 100       # LSTM hidden dimension
+  num_layers: 2         # Number of LSTM layers
+  dropout: 0.3          #  More dropout to weaken model
+  embedding_dim: 50     # Skill embedding dimension
+  model_type: "lstm"    # lstm or gru
+
+# Training
+training:
+  num_epochs: 50
+  batch_size: 16        
+  learning_rate: 0.001
+  optimizer: "adam"
+  scheduler: "plateau"  # plateau, step, or cosine
+  scheduler_patience: 5
+  scheduler_factor: 0.5
+  weight_decay: 0.00001
+  grad_clip: 5.0
+  device: "cuda"
+  num_workers: 4
+  save_dir: "models/dkt"
+  log_dir: "results/logs/dkt"
+  checkpoint_freq: 5    # Save checkpoint every N epochs
+
+# Early Stopping
+early_stopping:
+  enabled: true
+  patience: 10
+  min_delta: 0.001
+
+# Evaluation
+evaluation:
+  metrics: ["accuracy", "auc", "rmse"]
+  save_predictions: true
+  prediction_path: "results/dkt_predictions.csv"
+
+# Logging
+logging:
+  use_tensorboard: true
+  use_wandb: false
+  wandb_project: "adaptive-quizzing"
+  wandb_entity: "your-username"

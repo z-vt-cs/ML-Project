@@ -1,0 +1,30 @@
+# Baseline Models Configuration
+
+# Data
+data:
+  dataset: "assistments"  # Using ASSISTments 2015 dataset
+  data_path: "data/raw/assistments/2015_100_skill_builders_main_problems.csv"
+  train_split: 0.7
+  val_split: 0.15
+  test_split: 0.15
+  random_seed: 42
+
+# Logistic Regression
+logistic_regression:
+  max_iter: 1000
+  C: 1.0  # Regularization strength
+  solver: "lbfgs"
+  class_weight: "balanced"
+
+# Training
+training:
+  device: "cuda"  # cuda or cpu
+  num_workers: 4
+  save_dir: "models/baseline"
+  log_dir: "results/logs/baseline"
+
+# Evaluation
+evaluation:
+  metrics: ["accuracy", "auc", "precision", "recall", "f1"]
+  save_predictions: true
+  prediction_path: "results/baseline_predictions.csv"

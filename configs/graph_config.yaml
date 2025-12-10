@@ -1,0 +1,85 @@
+# Graph-Enhanced Knowledge Tracing Configuration
+
+# Data
+data:
+  dataset: "assistments"
+  data_path: "data/raw/assistments/2015_100_skill_builders_main_problems.csv"
+  train_split: 0.7
+  val_split: 0.15
+  test_split: 0.15
+  random_seed: 42
+  sequence_length: 200
+  min_interactions: 3
+
+# Knowledge Graph
+graph:
+  construction_method: "hybrid"  # Use hybrid for best results
+  edge_threshold: 0.10  # Lower threshold for more edges
+  max_neighbors: 20     # Increased connectivity for better graph signal
+  include_difficulty: true
+  graph_path: "data/processed/knowledge_graph.pkl"
+
+# Graph Neural Network
+gnn:
+  type: "gat"          # Use GAT for better attention-based aggregation
+  num_layers: 2        # 2 layers is sufficient for this graph size
+  hidden_dim: 200      # Match LSTM hidden dim for better fusion
+  num_heads: 4         # For GAT
+  dropout: 0.3         # Standard dropout
+  aggregation: "mean"  # mean, sum, or max
+
+# Model Architecture
+model:
+  input_dim: 100
+  hidden_dim: 200
+  num_layers: 2
+  dropout: 0.3         # Standard dropout
+  embedding_dim: 100
+  graph_embedding_dim: 200  # Match hidden_dim for balanced fusion
+  fusion_method: "concat"  # Concat is more reliable than attention
+  use_temporal: true
+  use_graph: true
+
+# Training
+training:
+  num_epochs: 50
+  batch_size: 32        # Standard batch size
+  learning_rate: 0.001  # Standard learning rate
+  optimizer: "adam"
+  scheduler: "plateau"
+  scheduler_patience: 5  # Standard patience
+  scheduler_factor: 0.5
+  weight_decay: 0.00001  # Light regularization
+  grad_clip: 5.0
+  device: "cuda"
+  num_workers: 4
+  save_dir: "models/graph_enhanced"
+  log_dir: "results/logs/graph_enhanced"
+  checkpoint_freq: 5
+
+# Loss weights
+loss:
+  prediction_weight: 1.0
+  graph_regularization: 0.3   # Stronger graph regularization
+  temporal_consistency: 0.1   # Stronger temporal consistency
+
+# Early Stopping
+early_stopping:
+  enabled: true
+  patience: 10
+  min_delta: 0.001
+
+# Evaluation
+evaluation:
+  metrics: ["accuracy", "auc", "rmse"]
+  save_predictions: true
+  prediction_path: "results/graph_predictions.csv"
+  analyze_by_difficulty: true
+  analyze_by_concept: true
+
+# Logging
+logging:
+  use_tensorboard: true
+  use_wandb: false
+  wandb_project: "adaptive-quizzing"
+  wandb_entity: "your-username"
